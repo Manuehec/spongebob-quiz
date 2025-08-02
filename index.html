@@ -494,13 +494,10 @@
 
         // Handler to start Level 2 when the user is ready
         function startLevel2() {
+          // Hide the level splash and jump to the first Level 2 question. We avoid
+          // any transition delays here to ensure the next question appears immediately.
           setShowLevel2(false);
-          // Advance to the next question (start of level 2)
-          setIsTransitioning(true);
-          setTimeout(() => {
-            setCurrentIndex(levelBreak);
-            setIsTransitioning(false);
-          }, 400);
+          setCurrentIndex(levelBreak);
         }
 
         function handleShowHint() {
