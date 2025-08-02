@@ -52,16 +52,25 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <!-- Babel to allow JSX in the browser -->
     <script src="https://unpkg.com/@babel/standalone@7.22.8/babel.min.js"></script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-18LMYVJQ52"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-18LMYVJQ52');
+    </script>
+
   </head>
   <body class="min-h-screen flex items-center justify-center p-4">
     <div id="root" class="w-full max-w-3xl"></div>
-      <!-- Donation button – replace href with your tipping link -->
-  <div class="mt-6 flex justify-center">
-    <a href="https://www.buymeacoffee.com/" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-yellow-300 hover:bg-yellow-400 text-blue-900 font-semibold rounded-full shadow-md">
-      Support our Quiz!
-    </a>
-  </div>
 
+    <!-- Donation button - replace href with your tipping link -->
+    <div class="mt-6 flex justify-center">
+      <a href="https://www.buymeacoffee.com/" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-yellow-300 hover:bg-yellow-400 text-blue-900 font-semibold rounded-full shadow-md">
+        Support our Quiz!
+      </a>
+    </div>
       <!-- Embedded questions data for offline usage. The JSON mirrors the contents of questions.json so the quiz can still load when opened as a local file. -->
       <script id="quiz-data" type="application/json">
         [
