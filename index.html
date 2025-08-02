@@ -158,6 +158,37 @@
     "answerIndex": 0,
     "hint": "Her species inflates as a defense mechanism—just like an airbag!"
   }
+  ,
+  {
+    "question": "Who is SpongeBob's driving teacher at boating school?",
+    "options": ["Mrs. Puff", "Sandy Cheeks", "Squidward", "Pearl"],
+    "answerIndex": 0,
+    "hint": "She is a pufferfish who inflates when SpongeBob crashes during lessons."
+  },
+  {
+    "question": "Which area of Bikini Bottom is home to swarms of jellyfish?",
+    "options": ["Jellyfish Fields", "Goo Lagoon", "Kelp Forest", "Rock Bottom"],
+    "answerIndex": 0,
+    "hint": "This meadow-like field is known for jellyfishing adventures."
+  },
+  {
+    "question": "What is the name of SpongeBob's money-loving boss at the Krusty Krab?",
+    "options": ["Mr. Krabs", "Plankton", "Barnacle Boy", "Gary"],
+    "answerIndex": 0,
+    "hint": "He’s a red crab obsessed with earning a buck and owns the Krusty Krab."
+  },
+  {
+    "question": "Which retired superheroes live in the Mermalair and occasionally fight crime?",
+    "options": ["Mermaid Man and Barnacle Boy", "Flying Dutchman and Man Ray", "Sandy and Patrick", "Mr. Krabs and Plankton"],
+    "answerIndex": 0,
+    "hint": "They are parodies of Aquaman and Aqualad who now reside in a retirement home."
+  },
+  {
+    "question": "In what year did SpongeBob SquarePants first premiere on television?",
+    "options": ["1999", "1997", "2001", "2003"],
+    "answerIndex": 0,
+    "hint": "The show debuted in the late 1990s, with the pilot airing May 1, 1999."
+  }
 ]
       </script>
     <!-- The quiz application -->
@@ -429,14 +460,23 @@
           }
         }
 
+        // Determine where level 2 starts. We break after the first set of easier questions.
+        const levelBreak = 13; // index at which Level 2 begins (0-based)
+        // State to flag when Level 2 is about to start
+        const [showLevel2, setShowLevel2] = useState(false);
         // Move to the next question or end the game
         function next() {
           // Hide any hint from the previous question
           setShowHint(false);
-          // If no lives remain after the last answer, end the game. The setLives call in handleAnswer
-          // will have updated the value of `lives` by the time this runs (one second later).
+          // If no lives remain after the last answer, end the game.
           if (lives <= 0) {
             setGameOver(true);
+            return;
+          }
+          // Check if the next question index would start Level 2
+          if (currentIndex + 1 === levelBreak) {
+            // Show Level 2 announcement instead of immediately showing the question
+            setShowLevel2(true);
             return;
           }
           // If this was the last question, show the victory screen
@@ -448,6 +488,17 @@
           setIsTransitioning(true);
           setTimeout(() => {
             setCurrentIndex((i) => i + 1);
+            setIsTransitioning(false);
+          }, 400);
+        }
+
+        // Handler to start Level 2 when the user is ready
+        function startLevel2() {
+          setShowLevel2(false);
+          // Advance to the next question (start of level 2)
+          setIsTransitioning(true);
+          setTimeout(() => {
+            setCurrentIndex(levelBreak);
             setIsTransitioning(false);
           }, 400);
         }
@@ -464,6 +515,8 @@
           setGameOver(false);
           setVictory(false);
           setIsTransitioning(false);
+          // Reset level state
+          setShowLevel2(false);
         }
 
         // If questions haven't loaded yet
@@ -471,6 +524,22 @@
           return (
             <div className="text-center text-xl text-blue-700">
               Loading questions...
+            </div>
+          );
+        }
+
+        // Show Level 2 splash screen when transitioning between levels
+        if (showLevel2) {
+          return (
+            <div className="text-center p-8">
+              <div className="text-4xl font-extrabold text-blue-800 mb-4">Level 2</div>
+              <p className="mb-6 text-lg text-blue-700">Ready for a challenge? Click below to continue.</p>
+              <button
+                onClick={startLevel2}
+                className="px-6 py-3 bg-yellow-300 hover:bg-yellow-400 text-blue-900 font-semibold rounded-full shadow-md"
+              >
+                Start Level 2
+              </button>
             </div>
           );
         }
