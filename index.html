@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpongeBob Quiz Game</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind to play nicely with our custom palette -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              spongebobYellow: '#FFF59D',
+              jellyfishPink: '#F48FB1',
+              oceanBlue: '#81D4FA',
+              kelpGreen: '#A5D6A7',
+              anchorGray: '#B0BEC5',
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Some simple custom styles for a cartoon look -->
+    <style>
+      body {
+        background: radial-gradient(circle at 50% 50%, #FFF9C4 0%, #FFF59D 50%, #FFEE58 100%);
+        font-family: 'Comic Sans MS', 'Patrick Hand', cursive, sans-serif;
+      }
+      /* Hint box animation */
+      .hint-box {
+        animation: bounceIn 0.5s ease forwards;
+      }
+      @keyframes bounceIn {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
+    <!-- React and ReactDOM via UMD builds -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel to allow JSX in the browser -->
+    <script src="https://unpkg.com/@babel/standalone@7.22.8/babel.min.js"></script>
+  </head>
+  <body class="min-h-screen flex items-center justify-center p-4">
+    <div id="root" class="w-full max-w-3xl"></div>
+      <!-- Embedded questions data for offline usage. The JSON mirrors the contents of questions.json so the quiz can still load when opened as a local file. -->
+      <script id="quiz-data" type="application/json">
+        [
+  {
+    "question": "What type of creature is SpongeBob's pet snail, Gary?",
+    "options": ["Sea snail", "Pufferfish", "Hermit crab", "Starfish"],
+    "answerIndex": 0,
+    "hint": "Gary is a sea snail who has a pink shell and meows like a cat."
+  },
+  {
+    "question": "Who is SpongeBob's best friend who lives under a rock?",
+    "options": ["Patrick Star", "Squidward Tentacles", "Mr. Krabs", "Sandy Cheeks"],
+    "answerIndex": 0,
+    "hint": "He's a lovable but dim-witted pink starfish who lives under a rock."
+  },
+  {
+    "question": "Where does Sandy Cheeks live in Bikini Bottom?",
+    "options": ["A treedome", "A spaceship", "A pineapple", "An igloo"],
+    "answerIndex": 0,
+    "hint": "As a land squirrel, she lives inside a glass dome filled with air and trees."
+  },
+  {
+    "question": "Which instrument does Squidward love to play?",
+    "options": ["Clarinet", "Guitar", "Violin", "Trumpet"],
+    "answerIndex": 0,
+    "hint": "It’s a woodwind instrument often used in classical music."
+  },
+  {
+    "question": "Who owns the Chum Bucket and plots to steal the Krabby Patty formula?",
+    "options": ["Plankton", "Mr. Krabs", "Mermaid Man", "Gary"],
+    "answerIndex": 0,
+    "hint": "This tiny green villain runs a rival restaurant right across the street from the Krusty Krab."
+  },
+  {
+    "question": "What is the popular brine pool beach hangout in Bikini Bottom called?",
+    "options": ["Goo Lagoon", "Jellyfish Fields", "Kelp Forest", "Mrs. Puff's Boating School"],
+    "answerIndex": 0,
+    "hint": "It’s a beach where residents of Bikini Bottom go to relax and tan under the sea."
+  },
+  {
+    "question": "In the episode ‘Pizza Delivery’, what food do SpongeBob and Squidward deliver?",
+    "options": ["A pizza", "Krabby Patties", "A secret recipe", "Seaweed salad"],
+    "answerIndex": 0,
+    "hint": "They sing a memorable song about this food while delivering it."
+  },
+  {
+    "question": "What job does SpongeBob have at the Krusty Krab?",
+    "options": ["Fry cook", "Cashier", "Janitor", "Manager"],
+    "answerIndex": 0,
+    "hint": "He’s famous for cooking delicious Krabby Patties."
+  },
+  {
+    "question": "Which catchphrase does SpongeBob often shout when excited?",
+    "options": ["I'm ready!", "I'm fired!", "I'm hungry!", "I love money!"],
+    "answerIndex": 0,
+    "hint": "He exclaims this at the beginning of many episodes and before work."
+  },
+  {
+    "question": "In which episode did Sandy Cheeks first appear?",
+    "options": ["Tea at the Treedome", "Help Wanted", "Pizza Delivery", "Bubblestand"],
+    "answerIndex": 0,
+    "hint": "It’s the episode where SpongeBob visits her air-filled dome for the first time."
+  },
+  {
+    "question": "What is the name of the green pirate ghost who collects souls of the living?",
+    "options": ["The Flying Dutchman", "Davy Jones", "Man Ray", "Captain Blue"],
+    "answerIndex": 0,
+    "hint": "He glows green and his ship often floats above the sea while haunting sailors."
+  },
+  {
+    "question": "Who is Mermaid Man’s underappreciated younger sidekick?",
+    "options": ["Barnacle Boy", "Man Ray", "Dirty Bubble", "Sea Horse"],
+    "answerIndex": 0,
+    "hint": "His name references a marine crustacean and he wears a sailor-like costume."
+  },
+  {
+    "question": "What happens to Mrs. Puff when SpongeBob crashes during boating lessons?",
+    "options": ["She inflates into a ball", "She shrinks", "She laughs", "She runs away"],
+    "answerIndex": 0,
+    "hint": "Her species inflates as a defense mechanism—just like an airbag!"
+  }
+]
+      </script>
+    <!-- The quiz application -->
+    <script type="text/babel">
+      const { useState, useEffect, useRef } = React;
+
+      /**
+       * LifeIndicator component displays heart icons representing remaining lives.
+       * Hearts flash with an animation when a life is lost.
+       */
+      function LifeIndicator({ lives, maxLives, animate }) {
+        // Render only the number of hearts equal to the remaining lives. When a life is lost,
+        // the hearts will visibly disappear instead of turning grey. A simple pulse animation
+        // is applied to the container when a heart is lost to draw the player’s eye.
+        return (
+          <div
+            className={`flex space-x-2 items-center ${animate ? 'animate-pulse' : ''}`}
+          >
+            {Array.from({ length: lives }).map((_, i) => (
+              <span key={i} className="text-3xl text-red-500">
+                ❤️
+              </span>
+            ))}
+          </div>
+        );
+      }
+
+      /**
+       * QuestionCard component shows the current question, answer options,
+       * hint button and hint text. It also handles answer selection and
+       * visual feedback for correct/incorrect answers.
+       */
+      function QuestionCard({
+        questionData,
+        onAnswer,
+        onNext,
+        showHint,
+        onShowHint,
+        isTransitioning,
+      }) {
+        const [selectedIndex, setSelectedIndex] = useState(null);
+        const [answered, setAnswered] = useState(false);
+        const [isCorrect, setIsCorrect] = useState(false);
+
+        useEffect(() => {
+          // Reset local state whenever a new question comes in
+          setSelectedIndex(null);
+          setAnswered(false);
+          setIsCorrect(false);
+        }, [questionData]);
+
+        function handleSelect(index) {
+          if (answered) return; // prevent multiple clicks
+          const correct = index === questionData.answerIndex;
+          setSelectedIndex(index);
+          setAnswered(true);
+          setIsCorrect(correct);
+          onAnswer(correct);
+          // Wait before moving on to next question to allow feedback
+          setTimeout(() => {
+            onNext();
+          }, 1000);
+        }
+
+        return (
+          <div
+            className={`p-6 bg-white bg-opacity-80 backdrop-blur-sm rounded-xl shadow-lg border-4 border-oceanBlue transform transition-all duration-500 ${
+              isTransitioning ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'
+            }`}
+          >
+            <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 mb-4">
+              {questionData.question}
+            </h2>
+            <div className="grid grid-cols-1 gap-3 mb-4">
+              {questionData.options.map((option, idx) => {
+                let bgColor = 'bg-white';
+                if (answered) {
+                  if (idx === questionData.answerIndex) {
+                    bgColor = 'bg-green-200';
+                  } else if (idx === selectedIndex) {
+                    bgColor = 'bg-red-200';
+                  }
+                }
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleSelect(idx)}
+                    disabled={answered}
+                    className={`w-full px-4 py-2 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors duration-200 ${bgColor} ${
+                      answered ? 'cursor-not-allowed' : ''
+                    }`}
+                  >
+                    <span className="text-lg md:text-xl font-medium text-blue-800">
+                      {option}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="flex items-center justify-between">
+              <button
+                onClick={onShowHint}
+                disabled={showHint || answered}
+                className={`px-3 py-1 rounded-full text-sm font-semibold shadow-md transition-colors duration-200 border border-yellow-400 ${
+                  showHint || answered
+                    ? 'bg-yellow-200 text-yellow-700 cursor-not-allowed'
+                    : 'bg-yellow-300 hover:bg-yellow-400 text-yellow-800'
+                }`}
+              >
+                Hint
+              </button>
+              {showHint && (
+                <div className="ml-4 p-3 bg-jellyfishPink bg-opacity-90 text-pink-900 rounded-md shadow-md hint-box w-full max-w-xs">
+                  <p className="text-sm font-semibold">{questionData.hint}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      /**
+       * GameOver component displays when the player loses all lives.
+       */
+      function GameOver({ score, total, onRestart }) {
+        return (
+          <div className="text-center p-6 bg-white bg-opacity-90 rounded-xl shadow-xl border-4 border-red-300">
+            <h2 className="text-3xl font-extrabold text-red-600 mb-4">Game Over!</h2>
+            <p className="text-xl text-gray-800 mb-2">
+              Your score: {score} out of {total}
+            </p>
+            <button
+              onClick={onRestart}
+              className="mt-4 px-5 py-2 rounded-full bg-red-400 hover:bg-red-500 text-white font-semibold shadow-md transition-colors duration-200"
+            >
+              Try Again
+            </button>
+          </div>
+        );
+      }
+
+      /**
+       * Victory component displays when the player answers all questions correctly or reaches the end with remaining lives.
+       */
+      function Victory({ score, total, onRestart }) {
+        return (
+          <div className="text-center p-6 bg-white bg-opacity-90 rounded-xl shadow-xl border-4 border-green-300">
+            <h2 className="text-3xl font-extrabold text-green-700 mb-4">You Win!</h2>
+            <p className="text-xl text-gray-800 mb-2">
+              Your final score: {score} out of {total}
+            </p>
+            <button
+              onClick={onRestart}
+              className="mt-4 px-5 py-2 rounded-full bg-green-400 hover:bg-green-500 text-white font-semibold shadow-md transition-colors duration-200"
+            >
+              Play Again
+            </button>
+          </div>
+        );
+      }
+
+      /**
+       * Main quiz container handles loading questions, tracking state and orchestrating the game flow.
+       */
+      function QuizContainer() {
+        const [questions, setQuestions] = useState([]);
+        const [currentIndex, setCurrentIndex] = useState(0);
+        const [score, setScore] = useState(0);
+        const [lives, setLives] = useState(3);
+        const [showHint, setShowHint] = useState(false);
+        const [gameOver, setGameOver] = useState(false);
+        const [victory, setVictory] = useState(false);
+        const [isTransitioning, setIsTransitioning] = useState(false);
+        const [animateHeart, setAnimateHeart] = useState(false);
+
+        useEffect(() => {
+          // Attempt to fetch questions from the JSON file. If that fails (e.g., when opened via file://),
+          // fall back to reading the embedded script tag. This allows the game to work offline while
+          // still storing the questions in a separate data file.
+          async function loadQuestions() {
+            try {
+              const response = await fetch('questions.json');
+              if (response.ok) {
+                const data = await response.json();
+                setQuestions(data);
+                return;
+              }
+              throw new Error('Failed to fetch');
+            } catch (error) {
+              // Fallback: parse questions from the embedded script tag
+              const scriptTag = document.getElementById('quiz-data');
+              if (scriptTag) {
+                try {
+                  const data = JSON.parse(scriptTag.textContent);
+                  setQuestions(data);
+                } catch (e) {
+                  console.error('Failed to parse embedded quiz data.', e);
+                }
+              } else {
+                console.error('No quiz data available.');
+              }
+            }
+          }
+          loadQuestions();
+        }, []);
+
+        // Handle answer selection from QuestionCard
+        function handleAnswer(isCorrect) {
+          if (isCorrect) {
+            // Increase score for correct answers
+            setScore((s) => s + 1);
+          } else {
+            // When the answer is wrong, use a functional update to avoid stale
+            // closures. This ensures we always subtract from the latest lives value.
+            setLives((prevLives) => {
+              const updated = prevLives - 1;
+              // Trigger the heart animation whenever a life is lost
+              setAnimateHeart(true);
+              // Reset the animation after a short delay
+              setTimeout(() => setAnimateHeart(false), 600);
+              // If no lives remain after this deduction, flag game over immediately.
+              if (updated <= 0) {
+                setGameOver(true);
+              }
+              return updated;
+            });
+          }
+        }
+
+        // Move to the next question or end the game
+        function next() {
+          // Hide any hint from the previous question
+          setShowHint(false);
+          // If no lives remain after the last answer, end the game. The setLives call in handleAnswer
+          // will have updated the value of `lives` by the time this runs (one second later).
+          if (lives <= 0) {
+            setGameOver(true);
+            return;
+          }
+          // If this was the last question, show the victory screen
+          if (currentIndex + 1 >= questions.length) {
+            setVictory(true);
+            return;
+          }
+          // Otherwise, animate and advance to the next question
+          setIsTransitioning(true);
+          setTimeout(() => {
+            setCurrentIndex((i) => i + 1);
+            setIsTransitioning(false);
+          }, 400);
+        }
+
+        function handleShowHint() {
+          setShowHint(true);
+        }
+
+        function restart() {
+          setCurrentIndex(0);
+          setScore(0);
+          setLives(3);
+          setShowHint(false);
+          setGameOver(false);
+          setVictory(false);
+          setIsTransitioning(false);
+        }
+
+        // If questions haven't loaded yet
+        if (!questions || questions.length === 0) {
+          return (
+            <div className="text-center text-xl text-blue-700">
+              Loading questions...
+            </div>
+          );
+        }
+
+        // If out of lives or flagged as game over
+        if (lives <= 0 || gameOver) {
+          return <GameOver score={score} total={questions.length} onRestart={restart} />;
+        }
+
+        // If all questions answered
+        if (victory) {
+          return <Victory score={score} total={questions.length} onRestart={restart} />;
+        }
+
+        const currentQuestion = questions[currentIndex];
+        return (
+          <div className="space-y-4">
+            {/* Header with score and lives */}
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-4 p-4 bg-oceanBlue bg-opacity-30 rounded-xl shadow-inner">
+              <h1 className="text-3xl font-extrabold text-blue-900 mb-2 sm:mb-0">
+                SpongeBob Quiz
+              </h1>
+              <div className="flex items-center space-x-6">
+                <div className="text-lg font-semibold text-blue-800">
+                  Score: {score}
+                </div>
+                <LifeIndicator lives={lives} maxLives={3} animate={animateHeart} />
+              </div>
+            </div>
+            {/* Question card */}
+            <QuestionCard
+              key={currentIndex}
+              questionData={currentQuestion}
+              onAnswer={handleAnswer}
+              onNext={next}
+              showHint={showHint}
+              onShowHint={handleShowHint}
+              isTransitioning={isTransitioning}
+            />
+          </div>
+        );
+      }
+
+      // Render the QuizContainer into root
+      ReactDOM.createRoot(document.getElementById('root')).render(<QuizContainer />);
+    </script>
+  </body>
+</html>

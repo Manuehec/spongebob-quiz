@@ -1,0 +1,80 @@
+[
+  {
+    "question": "What type of creature is SpongeBob's pet snail, Gary?",
+    "options": ["Sea snail", "Pufferfish", "Hermit crab", "Starfish"],
+    "answerIndex": 0,
+    "hint": "Gary is a sea snail who has a pink shell and meows like a cat."
+  },
+  {
+    "question": "Who is SpongeBob's best friend who lives under a rock?",
+    "options": ["Patrick Star", "Squidward Tentacles", "Mr. Krabs", "Sandy Cheeks"],
+    "answerIndex": 0,
+    "hint": "He's a lovable but dim-witted pink starfish who lives under a rock."
+  },
+  {
+    "question": "Where does Sandy Cheeks live in Bikini Bottom?",
+    "options": ["A treedome", "A spaceship", "A pineapple", "An igloo"],
+    "answerIndex": 0,
+    "hint": "As a land squirrel, she lives inside a glass dome filled with air and trees."
+  },
+  {
+    "question": "Which instrument does Squidward love to play?",
+    "options": ["Clarinet", "Guitar", "Violin", "Trumpet"],
+    "answerIndex": 0,
+    "hint": "It’s a woodwind instrument often used in classical music."
+  },
+  {
+    "question": "Who owns the Chum Bucket and plots to steal the Krabby Patty formula?",
+    "options": ["Plankton", "Mr. Krabs", "Mermaid Man", "Gary"],
+    "answerIndex": 0,
+    "hint": "This tiny green villain runs a rival restaurant right across the street from the Krusty Krab."
+  },
+  {
+    "question": "What is the popular brine pool beach hangout in Bikini Bottom called?",
+    "options": ["Goo Lagoon", "Jellyfish Fields", "Kelp Forest", "Mrs. Puff's Boating School"],
+    "answerIndex": 0,
+    "hint": "It’s a beach where residents of Bikini Bottom go to relax and tan under the sea."
+  },
+  {
+    "question": "In the episode ‘Pizza Delivery’, what food do SpongeBob and Squidward deliver?",
+    "options": ["A pizza", "Krabby Patties", "A secret recipe", "Seaweed salad"],
+    "answerIndex": 0,
+    "hint": "They sing a memorable song about this food while delivering it."
+  },
+  {
+    "question": "What job does SpongeBob have at the Krusty Krab?",
+    "options": ["Fry cook", "Cashier", "Janitor", "Manager"],
+    "answerIndex": 0,
+    "hint": "He’s famous for cooking delicious Krabby Patties."
+  },
+  {
+    "question": "Which catchphrase does SpongeBob often shout when excited?",
+    "options": ["I'm ready!", "I'm fired!", "I'm hungry!", "I love money!"],
+    "answerIndex": 0,
+    "hint": "He exclaims this at the beginning of many episodes and before work."
+  },
+  {
+    "question": "In which episode did Sandy Cheeks first appear?",
+    "options": ["Tea at the Treedome", "Help Wanted", "Pizza Delivery", "Bubblestand"],
+    "answerIndex": 0,
+    "hint": "It’s the episode where SpongeBob visits her air-filled dome for the first time."
+  },
+  {
+    "question": "What is the name of the green pirate ghost who collects souls of the living?",
+    "options": ["The Flying Dutchman", "Davy Jones", "Man Ray", "Captain Blue"],
+    "answerIndex": 0,
+    "hint": "He glows green and his ship often floats above the sea while haunting sailors."
+  },
+  {
+    "question": "Who is Mermaid Man’s underappreciated younger sidekick?",
+    "options": ["Barnacle Boy", "Man Ray", "Dirty Bubble", "Sea Horse"],
+    "answerIndex": 0,
+    "hint": "His name references a marine crustacean and he wears a sailor-like costume."
+  },
+  {
+    "question": "What happens to Mrs. Puff when SpongeBob crashes during boating lessons?",
+    "options": ["She inflates into a ball", "She shrinks", "She laughs", "She runs away"],
+    "answerIndex": 0,
+    "hint": "Her species inflates as a defense mechanism—just like an airbag!"
+  }
+]
