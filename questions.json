@@ -77,4 +77,35 @@
     "answerIndex": 0,
     "hint": "Her species inflates as a defense mechanism—just like an airbag!"
   }
+  ,
+  {
+    "question": "Who is SpongeBob's driving teacher at boating school?",
+    "options": ["Mrs. Puff", "Sandy Cheeks", "Squidward", "Pearl"],
+    "answerIndex": 0,
+    "hint": "She is a pufferfish who inflates when SpongeBob crashes during lessons."
+  },
+  {
+    "question": "Which area of Bikini Bottom is home to swarms of jellyfish?",
+    "options": ["Jellyfish Fields", "Goo Lagoon", "Kelp Forest", "Rock Bottom"],
+    "answerIndex": 0,
+    "hint": "This meadow-like field is known for jellyfishing adventures."
+  },
+  {
+    "question": "What is the name of SpongeBob's money-loving boss at the Krusty Krab?",
+    "options": ["Mr. Krabs", "Plankton", "Barnacle Boy", "Gary"],
+    "answerIndex": 0,
+    "hint": "He’s a red crab obsessed with earning a buck and owns the Krusty Krab."
+  },
+  {
+    "question": "Which retired superheroes live in the Mermalair and occasionally fight crime?",
+    "options": ["Mermaid Man and Barnacle Boy", "Flying Dutchman and Man Ray", "Sandy and Patrick", "Mr. Krabs and Plankton"],
+    "answerIndex": 0,
+    "hint": "They are parodies of Aquaman and Aqualad who now reside in a retirement home."
+  },
+  {
+    "question": "In what year did SpongeBob SquarePants first premiere on television?",
+    "options": ["1999", "1997", "2001", "2003"],
+    "answerIndex": 0,
+    "hint": "The show debuted in the late 1990s, with the pilot airing May 1, 1999."
+  }
 ]
