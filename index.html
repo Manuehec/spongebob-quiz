@@ -77,6 +77,9 @@
         Visit our Bikini Bottom Blog →
       </a>
     </div>
+
+    <!-- Cozy ukulele background music. Replace the src with your generated track. -->
+    <audio id="bg-audio" src="ukulele.mp3" loop preload="auto"></audio>
       <!-- Embedded questions data for offline usage. The JSON mirrors the contents of questions.json so the quiz can still load when opened as a local file. -->
       <script id="quiz-data" type="application/json">
         [
@@ -200,16 +203,34 @@
        * Hearts flash with an animation when a life is lost.
        */
       function LifeIndicator({ lives, maxLives, animate }) {
-        // Render only the number of hearts equal to the remaining lives. When a life is lost,
-        // the hearts will visibly disappear instead of turning grey. A simple pulse animation
-        // is applied to the container when a heart is lost to draw the player’s eye.
+        // Render cartoon Krabby Patty (burger) icons instead of hearts. Each remaining life
+        // displays a colourful burger SVG. When a life is lost, the icons disappear and
+        // the container briefly pulses to draw the player’s eye.
+        const BurgerIcon = () => (
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {/* top bun */}
+            <rect x="2" y="2" width="20" height="5" rx="2.5" fill="#F2C94C" />
+            {/* lettuce */}
+            <rect x="2" y="7" width="20" height="2" fill="#6FCF97" />
+            {/* patty */}
+            <rect x="2" y="9" width="20" height="4" fill="#A0522D" />
+            {/* bottom bun */}
+            <rect x="2" y="13" width="20" height="4" rx="2" fill="#F2C94C" />
+          </svg>
+        );
         return (
           <div
             className={`flex space-x-2 items-center ${animate ? 'animate-pulse' : ''}`}
           >
             {Array.from({ length: lives }).map((_, i) => (
-              <span key={i} className="text-3xl text-red-500">
-                ❤️
+              <span key={i} className="w-7 h-7 inline-flex items-center justify-center">
+                <BurgerIcon />
               </span>
             ))}
           </div>
@@ -435,6 +456,28 @@
             }
           }
           loadQuestions();
+        }, []);
+
+        // Play background music once the component mounts. This effect tries to
+        // start playback immediately and, if blocked by the browser's autoplay
+        // policy, waits for the first user interaction (a click anywhere on
+        // the page) to trigger playback. The audio file should be located at
+        // spongebob_quiz/ukulele.mp3 and referenced by the <audio id="bg-audio"> element.
+        useEffect(() => {
+          const audioEl = document.getElementById('bg-audio');
+          if (!audioEl) return;
+          audioEl.volume = 0.3;
+          const playPromise = audioEl.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              // If autoplay is blocked, wait for a user click to play
+              const onUserGesture = () => {
+                audioEl.play();
+                window.removeEventListener('click', onUserGesture);
+              };
+              window.addEventListener('click', onUserGesture, { once: true });
+            });
+          }
         }, []);
 
         // Handle answer selection from QuestionCard
